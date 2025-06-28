@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247536173326",
+    "project_id": "aepta-edc61",
+    "storage_bucket": "aepta-edc61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247536173326:android:b34be7ab62dcf63d5c575f",
+        "android_client_info": {
+          "package_name": "com.technyk.aepta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_LLe2E6gGugxJEZFxg22WpEa_f-0G14w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

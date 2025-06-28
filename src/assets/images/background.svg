@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="812px" viewBox="0 0 375 812" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>F2442C32-00FB-4FCF-BA6A-DC8F73C3D71A</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="375" height="812"></rect>
+    </defs>
+    <g id="PSOI_New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="background">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Mask" fill="#151831" xlink:href="#path-1"></use>
+            <path d="M383.104118,170.5 C414.584349,170.5 428.678337,160.832236 428.678337,133.494141 C428.678337,106.156046 398.033568,59 366.553337,59 C335.073106,59 257.391228,103 309.553337,108.5 C361.715446,114 351.623887,170.5 383.104118,170.5 Z" id="Oval" fill="#363B5D" opacity="0.400000006" style="mix-blend-mode: lighten;" mask="url(#mask-2)"></path>
+            <path d="M60,119.85141 C111.142578,99.3670345 150,79.557037 150,29.8514095 C150,-19.854218 28.1816406,-0.148590497 60,-60.1485905 C91.8183594,-120.14859 -30,20.4080501 -30,29.8514095 C-30,39.2947689 8.85742188,140.335785 60,119.85141 Z" id="Oval" fill="#363B5D" opacity="0.400000006" style="mix-blend-mode: lighten;" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

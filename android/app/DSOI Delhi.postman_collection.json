@@ -1,0 +1,138 @@
+{
+	"info": {
+		"_postman_id": "48b9e1f7-e41f-4195-bd7f-dc4425fbe89c",
+		"name": "DSOI Delhi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "176941"
+	},
+	"item": [
+		{
+			"name": "Web service",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"member_id\": \"14065\",\r\n    \"pay_mode\": \"CARD\",\r\n    \"ws_type\": \"transaction\"\r\n}"
+				},
+				"url": {
+					"raw": "https://dsoi.org.in/membersection/mobileAPI/web_service.php",
+					"protocol": "https",
+					"host": [
+						"dsoi",
+						"org",
+						"in"
+					],
+					"path": [
+						"membersection",
+						"mobileAPI",
+						"web_service.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "documents",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ws_type\": \"documents\"\r\n}"
+				},
+				"url": {
+					"raw": "https://dsoi.org.in/membersection/mobileAPI/web_service.php",
+					"protocol": "https",
+					"host": [
+						"dsoi",
+						"org",
+						"in"
+					],
+					"path": [
+						"membersection",
+						"mobileAPI",
+						"web_service.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"member_id\": \"14065\",\r\n    \"pay_mode\": \"CARD\",\r\n    \"ws_type\": \"transaction\"\r\n}"
+				},
+				"url": {
+					"raw": "https://dsoi.org.in/membersection/mobileAPI/web_service.php",
+					"protocol": "https",
+					"host": [
+						"dsoi",
+						"org",
+						"in"
+					],
+					"path": [
+						"membersection",
+						"mobileAPI",
+						"web_service.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"member_id\": \"40\",\r\n    \"ws_type\": \"login\",\r\n    \"password\": \"141119431\"\r\n}"
+				},
+				"url": {
+					"raw": "https://dsoi.org.in/membersection/mobileAPI/web_service.php",
+					"protocol": "https",
+					"host": [
+						"dsoi",
+						"org",
+						"in"
+					],
+					"path": [
+						"membersection",
+						"mobileAPI",
+						"web_service.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

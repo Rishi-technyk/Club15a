@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Cinzel-VariableFont_wght.ttf",
+      "sha1": "f9784252506646e82487831ab3a2dbbf91d325de"
+    },
+    {
+      "path": "src/assets/fonts/Lobster-Regular.ttf",
+      "sha1": "bf2c7d8e38f749f550d8226e04c917996582159c"
+    },
+    {
+      "path": "src/assets/fonts/Muli-SemiBold.ttf",
+      "sha1": "58e12c06ff936c0a1a76e6a747a9f0b6f4c7d07e"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-Italic-VariableFont_wght.ttf",
+      "sha1": "53bd0f9261c574eecd69add006823da10ba39e74"
+    },
+    {
+      "path": "src/assets/fonts/Mulish-VariableFont_wght.ttf",
+      "sha1": "859ead4e62738f88de1313da5cca9ef06cfe6219"
+    },
+    {
+      "path": "src/assets/fonts/OpenSans-Bold.ttf",
+      "sha1": "c1691e8168b2596af8a00162bac60dbe605e9e36"
+    },
+    {
+      "path": "src/assets/fonts/OpenSans-Light.ttf",
+      "sha1": "40442c189568184b6e6c27a25d69f14d91b65039"
+    },
+    {
+      "path": "src/assets/fonts/OpenSans-Semibold.ttf",
+      "sha1": "f1ee7a9c6d13ee2d642a806c09e737275e613792"
+    },
+    {
+      "path": "src/assets/fonts/OpenSans.ttf",
+      "sha1": "3564ed0b5363df5cf277c16e0c6bedc5a682217f"
+    }
+  ]
+}
