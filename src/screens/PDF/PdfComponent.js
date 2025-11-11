@@ -25,7 +25,7 @@ const PDFComponent = (props) => {
   }, []);
 
   const { navigation, route } = props;
-  console.log(route.params.url, "---------------route---------------");
+  console.log(route.params, "---------------route---------------");
   return (
     <View style={styles.container}>
       {loading && (
@@ -56,7 +56,7 @@ const PDFComponent = (props) => {
           </View>
         </View>
       )}
-      <Header title={"Invoice"} />
+      <Header title={route?.params?.name?route.params.name:"Invoice"} />
 
       <Pdf
         enablePaging={false}

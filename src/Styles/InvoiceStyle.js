@@ -17,7 +17,7 @@ export default InvoiceStyles = StyleSheet.create({
     fontFamily: FONT_FAMILY.bold,
     marginLeft: 5,
   },
-  svg: { position: "absolute", bottom: 5, right: 5 },
+  svg: { position: "absolute",right: 5,top:130 },
   moneyText: {
     fontSize: 15,
     color: "#79ca14",

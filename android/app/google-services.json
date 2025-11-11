@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "247536173326",
-    "project_id": "aepta-edc61",
-    "storage_bucket": "aepta-edc61.appspot.com"
+    "project_number": "192102689785",
+    "project_id": "club-15a",
+    "storage_bucket": "club-15a.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:247536173326:android:b34be7ab62dcf63d5c575f",
+        "mobilesdk_app_id": "1:192102689785:android:53e0da1f8e11df0f4c2b28",
         "android_client_info": {
-          "package_name": "com.technyk.aepta"
+          "package_name": "com.technyk.club15a"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD_LLe2E6gGugxJEZFxg22WpEa_f-0G14w"
+          "current_key": "AIzaSyDr0lbuoXAnotCpxBV14Uvs2ASUIj3lYrA"
         }
       ],
       "services": {

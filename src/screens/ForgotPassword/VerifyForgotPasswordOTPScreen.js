@@ -163,7 +163,7 @@ const VerifyForgotPasswordOTPScreen = ({route, navigation}) => {
           source={require('../../assets/images/AeptaLogo.png')}
           style={Loginstyles.logo}
         />
-        <Text style={Loginstyles.headdingTitle}>AEPTA</Text>
+        <Text style={Loginstyles.headdingTitle}>Club 15A</Text>
       </View>
       <View>
         <Text style={Loginstyles.signInText}>Verify OTP</Text>

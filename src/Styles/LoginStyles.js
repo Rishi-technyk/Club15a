@@ -15,6 +15,14 @@ export const Loginstyles = StyleSheet.create({
     backgroundColor: DARK_BLUE,
     // paddingHorizontal: 40,
   },
+   textInput:{
+    color: 'black',
+  borderBottomWidth: 1,
+  borderBottomColor: '#363b5d',
+  borderRadius: 10,
+  paddingHorizontal: 10,
+  fontFamily: FONT_FAMILY.normal,
+},
   innerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

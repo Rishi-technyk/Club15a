@@ -4,14 +4,11 @@ import Svg, { G, Path, Ellipse } from "react-native-svg"
 function SvgComponent(props) {
   return (
     <Svg
-      width="240px"
-      height="240"
+   
+        width="60px"
+      height="60"
       viewBox="0 0 115 102"
       xmlns="http://www.w3.org/2000/svg"
-        // width="60px"
-      // height="60"
-      // viewBox="0 0 115 102"
-      // xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <G

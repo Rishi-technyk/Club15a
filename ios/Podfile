@@ -14,7 +14,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'AEPTA' do
+target 'Club15a' do
   config = use_native_modules!
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
@@ -27,7 +27,7 @@ target 'AEPTA' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'AEPTATests' do
+  target 'Club15aTests' do
     inherit! :complete
     # Pods for testing
   end

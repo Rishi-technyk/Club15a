@@ -43,7 +43,6 @@ const inAppUpdates = new SpInAppUpdates(
 const HomeComponent = ({navigation}) => {
   const Version = DeviceInfo.getVersion().toUpperCase();
   const [balance, setBalance] = useState(0);
-
   const [otpModal, setOTPModal] = useState(false);
   const isFocused = useIsFocused();
   const userData = useSelector(state => state.auth.userData);
@@ -51,7 +50,8 @@ const HomeComponent = ({navigation}) => {
   const [store, setStore] = useState('');
   const [account_summary, setAccount_summary] = useState(null);
   const [options, setOptions] = useState(null);
-  const iOS = Platform.OS === 'ios';
+  const [screens2,setScreen2] = useState([]);
+ const iOS = Platform.OS === 'ios';
   useEffect(() => {
     callAPI();
     fetchAccountsummery();
@@ -61,8 +61,19 @@ const HomeComponent = ({navigation}) => {
  
   useEffect(() => {
     fetchVersion();
+    fetchOptions()
   }, []);
+const fetchOptions = async () => {
+    let body = {};
+    const apiRequestObject = {
+      path: "menus",
+      body: body,
+    };
+    const response = await api.javascriptGet(apiRequestObject);
 
+   if (response.status && response.data)
+      setScreen2(response.data);
+  };
   function compareVersions(version1, version2) {
     const v1 = version1.split('.').map(Number);
     const v2 = version2.split('.').map(Number);
@@ -108,9 +119,7 @@ const HomeComponent = ({navigation}) => {
         : response?.data?.current_app_version;
 
       const comparison = compareVersions(Version, apiVersion);
-      // console.log(response, Version, "is_notification_read", comparison);
-      console.log('\x1b[36m%s\x1b[0m', response, '---------------------- comparison ---------------------');
-      if (apiVersion) {
+     if (apiVersion) {
         if (comparison < 0) {
           let hardUpdate = iOS
             ? response.data.ios_hard_update
@@ -121,7 +130,6 @@ const HomeComponent = ({navigation}) => {
       }
     }
   };
-
   const fetchAccountsummery = async () => {
     let body = {};
     body.ws_type = ENDPOINT.account_summary;
@@ -166,7 +174,7 @@ const HomeComponent = ({navigation}) => {
       const response = await api.javascriptGet(apiRequestObject);
       const Summery = await api.javascriptGet(summeryOblect);
      Summery.status ? setAccount_summary(Summery.data) : '0.00';
-     response.data.balance ? setBalance(response.data.balance) : '0.00';
+    response.data.balance.balance ? setBalance(response.data.balance.balance) : '0.00';
    
 
       return response;
@@ -229,12 +237,21 @@ const HomeComponent = ({navigation}) => {
       icon: "Statement.svg",
       navigate: "Invoice",
     },
-    {
+    // {
+    //   id: 2,
+    //   name: "Card",
+    //   icon: "Recharge.svg",
+    //   navigate: "Recharge",
+    //   data: balance,
+    // },
+     {
       id: 2,
-      name: "Card",
-      icon: "Recharge.svg",
-      navigate: "Recharge",
-      data: balance,
+      name: "Circulars",
+      icon: "news.svg",
+      subTitle: "Stay updated with the latest announcements.",
+      navigate: "Notification",
+      data: "",
+      fullwidth: false,
     },
     {
       id: 3,
@@ -244,34 +261,12 @@ const HomeComponent = ({navigation}) => {
     },
    
   ];
-  const screens2 = [
 
-    {
-      id: 2,
-      name: "News & Circulars",
-      icon: "news.svg",
-      subTitle: "Stay updated with the latest announcements.",
-      navigate: "Notification",
-      data: "",
-      fullwidth: false,
-    },
-    // {
-    //   id: 3,
-    //   name: "Facility Booking",
-    //   subTitle: "Browse exclusive facilities and games options.",
-    //   icon: "Meal.svg",
-    //   navigate: "AllFacilities",
-    //   data: "https://club26.org/CLUB26-MENU.pdf",
-    //   fullwidth: false,
-    // },
-  ];
-console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ---------------------');
- 
   const renderBottomList = ({item}) => {
     return (
       <TouchableOpacity
       activeOpacity={0.9}
-        onPress={() => navigation.navigate(item.navigate, {url: item.data})}
+        onPress={() => navigation.navigate(item.navigate, {url: item.data,name:item.name||''})}
         style={[styles.card, {}]}>
         <View style={{}}>
           <View>
@@ -350,12 +345,12 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
                 marginLeft: 5,
                 fontFamily: FONT_FAMILY.semiBold,
               }}>
-              AEPTA
+              Club 15A
             </Text>
           </View>
         </View>
 
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -372,9 +367,9 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
             Card Balance:{" "}
           </Text>
           <Text style={[styles.moneyText, { fontSize: 20 }]} numberOfLines={2}>
-            ₹{balance ? Number(balance).toFixed(2) : "0.00"}
+            ₹{balance ? balance : "0.00"}
           </Text>
-        </View>
+        </View> */}
       </View>
     
         <View
@@ -399,8 +394,8 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
               backdropFilter: "blur(10px)",
               opacity: 1,
             }}>
-            <View style={{ position: "absolute", top: "40%", right: 0 }}>
-              <TransactionBoxImage style={{ scale: 0.6 }} />
+            <View style={{ position: "absolute", top: "40%", right: 10 }}>
+              <TransactionBoxImage style={{ scale: 1 }} />
             </View>
             <View
               style={{
@@ -417,40 +412,31 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
                 alignItems: "center",
               }}>
               <View style={{ flex: 0.5 }}>
-                <Text style={styles.postpaidBalanceText}>Current Bill</Text>
+                <Text style={styles.postpaidBalanceText}>Allocated Credit Limit:</Text>
                 <Text style={styles.moneyText}>
                   ₹
-                  {account_summary?.bill_amt
-                    ? Number(account_summary?.bill_amt).toFixed(2)
+                  {account_summary?.credit_limit
+                    ? Number(account_summary?.credit_limit).toFixed(2)
                     : "0.00"}
                 </Text>
               </View>
-              <View style={{ flex: 0.5 }}>
-                <Text style={styles.postpaidBalanceText}>Unbilled Debit</Text>
+               {/* <View style={{ flex: 0.5 }}>
+                <Text style={styles.postpaidBalanceText}>Current Outstanding:</Text>
                 <Text style={styles.moneyText}>
                   ₹
-                  {account_summary?.total_debit
-                    ? Number(account_summary?.total_debit).toFixed(2)
+                  {account_summary?.outstanding_amt
+                    ? Number(account_summary?.outstanding_amt).toFixed(2)
                     : "0.00"}
                 </Text>
-              </View>
+              </View> */}
             </View>
-            <View
+              <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
               }}>
-              <View style={{ flex: 0.5 }}>
-                <Text style={styles.postpaidBalanceText}>Unbilled Credit</Text>
-                <Text style={styles.moneyText}>
-                  ₹
-                  {account_summary?.total_credit
-                    ? Number(account_summary?.total_credit).toFixed(2)
-                    : "0.00"}
-                </Text>
-              </View>
-              <View style={{ flex: 0.5 }}>
-                <Text style={styles.postpaidBalanceText}>Outstanding</Text>
+            <View style={{ flex: 0.5 }}>
+                <Text style={styles.postpaidBalanceText}>Current Outstanding:</Text>
                 <Text style={styles.moneyText}>
                   ₹
                   {account_summary?.outstanding_amt
@@ -458,6 +444,31 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
                     : "0.00"}
                 </Text>
               </View>
+              </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <View style={{ flex: 0.5 }}>
+                <Text style={styles.postpaidBalanceText}>Available Credit Limit:</Text>
+                <Text style={styles.moneyText}>
+                  ₹
+                  {account_summary?.avaiable_limit
+                    ? Number(account_summary?.avaiable_limit).toFixed(2)
+                    : "0.00"}
+                </Text>
+              </View>
+              {/* <View style={{ flex: 0.5 }}>
+                <Text style={styles.postpaidBalanceText}>Unbilled Debit</Text>
+                <Text style={styles.moneyText}>
+                  ₹
+                  {account_summary?.total_debit
+                    ? Number(account_summary?.total_debit).toFixed(2)
+                    : "0.00"}
+                </Text>
+              </View> */}
+             
             </View>
           </View>
         </View>
@@ -502,7 +513,7 @@ console.log('\x1b[32m%s\x1b[0m', balance, '---------------------- balance ------
           />
         </View>
     
-      {update && (
+        {update && (
         <Modal visible={true} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -567,6 +578,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily:FONT_FAMILY.normal,
     textAlign: "center",
+    color:'black'
   },
   buttonContainer: {
     flexDirection: "row",
@@ -653,410 +665,3 @@ const styles = StyleSheet.create({
     borderRadius: 50, // Make it round
   },
 });
-// import React, {useState, useEffect} from 'react';
-// import {
-//   View,
-//   Text,
-//   FlatList,
-//   TouchableOpacity,
-//   Image,
-//   Dimensions,
-//   StatusBar,
-//   ScrollView,
-//   StyleSheet,
-//   Alert,
-// } from 'react-native';
-// import {SECONDARY_COLOR} from '../../util/colors';
-// import {ENDPOINT, FONT_FAMILY} from '../../util/constant';
-// import {moderateScale} from '../../util/scale';
-// import * as api from '../../util/api';
-// import {useIsFocused} from '@react-navigation/native';
-// import {useSelector} from 'react-redux';
-// import TransactionBoxImage from '../../assets/svg/TransactionBoxImage';
-// import SvgUri from 'react-native-svg-uri';
-// import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-// import LinearGradient from 'react-native-linear-gradient';
-
-// const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-
-// const HomeComponent = ({navigation}) => {
-//   const [balance, setBalance] = useState(0);
-//   const isFocused = useIsFocused();
-//   const [options, setOptions] = useState(null);
-//   const userData = useSelector(state => state.auth.userData);
-//   const [account_summary, setAccount_summary] = useState(null);
-//   useEffect(() => {
-//     callAPI();
-//   }, [isFocused]);
-
-//   const fetchMenus = async () => {
-//     let body = {};
-
-//     try {
-//       const apiRequestObject = {
-//         path: ENDPOINT.menus,
-//         body: body,
-//         Token: userData.data.token,
-//       };
-
-//       const response = await api.javascriptGet(apiRequestObject);
-
-//       if (response.status) {
-//         setOptions(response.data);
-//       }
-//     } catch (error) {}
-//   };
-//   useEffect(() => {
-//     fetchMenus();
-//   }, []);
-//   async function callAPI() {
-//     let body = {};
-//     body.ws_type = ENDPOINT.card_balance;
-//     body.member_id =
-//       userData.data.data.length > 0 ? userData.data.data[0].MemberID : 0;
-
-//     try {
-//       const apiRequestObject = {
-//         path: ENDPOINT.card_balance,
-//         body: body,
-//         Token: userData.data.token,
-//       };
-//       let summeryOblect = {
-//         path: ENDPOINT.account_summary,
-//         Token: userData.data.token,
-//         body: {},
-//       };
-//       const response = await api.javascriptGet(apiRequestObject);
-//       const Summery = await api.javascriptGet(summeryOblect);
-
-//       Summery.status ? setAccount_summary(Summery.data) : '0.00';
-//       response.data.balance ? setBalance(response.data.balance) : '0.00';
-//       console.log(
-//         response.data.balance,
-//         '---------------response.data.balance---------------',
-//       );
-
-//       return response;
-//     } catch (err) {
-//       return {result: FAILURE};
-//     }
-//   }
-
-//   const {height, width} = Dimensions.get('window');
-
-//   const renderItem = (item, options) => {
-//     return (
-//       <View style={{flexGrow: 1 / 3, flex: 1}}>
-//         <TouchableOpacity
-//           onPress={() => {
-//             item.item.navigate
-//               ? navigation.navigate(item.item.navigate)
-//               : Alert.alert(item.item.name, 'Feature coming soon...');
-//           }}
-//           activeOpacity={0.6}>
-//           <View style={{flex: 1, alignItems: 'center'}}>
-//             <View style={options ? styles.secondryIcon : styles.primeryIcon}>
-//               <SvgUri
-//                 height={40}
-//                 width={40}
-//                 source={{
-//                   uri: `https://mbclublucknow.org/mbclublogin/public/icons/${item.item.icon}`,
-//                 }}
-//               />
-//             </View>
-//             <Text style={{color: 'black', marginBottom: 10}}>
-//               {item.item.name}
-//             </Text>
-//           </View>
-//         </TouchableOpacity>
-//       </View>
-//     );
-//   };
-//   const emptyList = () => (
-//     <FlatList
-//       data={[1, 1, 1, 1, 1, 1]}
-//       numColumns={3}
-//       renderItem={() => (
-//         <View style={{flexGrow: 1 / 3, flex: 1}}>
-//           <View style={{flex: 1, alignItems: 'center', marginBottom: 20}}>
-//             <ShimmerPlaceholder style={styles.roundShimmer} />
-//             <ShimmerPlaceholder style={{width: 50, marginTop: 20}} />
-//           </View>
-//         </View>
-//       )}
-//     />
-//   );
-//   return (
-//     <View style={{flex: 1}}>
-//       <StatusBar
-//         backgroundColor={'transparent'}
-//         translucent
-//         barStyle={'light-content'}
-//       />
-//       <View
-//         style={{
-//           position: 'absolute',
-//           height: 190,
-//           width: width,
-//           backgroundColor: '#222642',
-//           borderBottomLeftRadius: 50,
-//           borderBottomRightRadius: 50,
-//         }}
-//       />
-//       <View
-//         style={{
-//           flexDirection: 'row',
-//           justifyContent: 'space-between',
-//           marginTop: 30,
-//           marginBottom: 20,
-//           paddingHorizontal: 25,
-//           alignItems: 'center',
-//         }}>
-//         <View>
-//           <View
-//             style={{
-//               flexDirection: 'row',
-//               justifyContent: 'space-between',
-//               width: width - 50,
-//               paddingVertical: 20,
-//             }}>
-//             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-//               <Image
-//                 source={require('../../assets/images/AeptaLogo.png')}
-//                 style={{height: 30, width: 30, borderRadius: 15}}
-//               />
-//               <Text style={{color: 'white', fontSize: 25, marginLeft: 5}}>
-//                 MB Club
-//               </Text>
-//             </View>
-
-//             <TouchableOpacity
-//               activeOpacity={0.5}
-//               onPress={() => navigation.navigate('Setting')}
-//               style={{
-//                 marginLeft: 15,
-//                 flexDirection: 'row',
-//                 alignItems: 'center',
-//               }}>
-//               <Image
-//                 source={require('../../assets/images/settings.png')}
-//                 style={{height: 22, width: 22, tintColor: 'white'}}
-//               />
-//             </TouchableOpacity>
-//           </View>
-//           <Text
-//             style={{
-//               color: 'white',
-//               fontSize: moderateScale(20),
-//               fontFamily: FONT_FAMILY.normal,
-//               fontWeight: 'bold',
-//             }}>
-//             Hi,{' '}
-//             {userData?.data?.data[0]?.DisplayName
-//               ? userData.data.data[0].DisplayName
-//               : 'User'}
-//           </Text>
-//         </View>
-//       </View>
-//       <View style={{alignItems: 'center', justifyContent: 'center'}}>
-//         <View
-//           style={{
-//             width: width - 30,
-//             backgroundColor: '#F5FFE9',
-//             borderRadius: 20,
-
-//             padding: 25,
-//             paddingTop: 15,
-//             paddingBottom: 10,
-//           }}>
-//           <View
-//             style={{
-//               flexDirection: 'row',
-//               alignItems: 'center',
-//               justifyContent: 'space-between',
-//             }}>
-//             <View style={{}}>
-//               <Text style={styles.prepaidText} numberOfLines={2}>
-//                 Card Recharge
-//               </Text>
-//               <Text style={styles.moneyText} numberOfLines={2}>
-//                 ₹{balance.balance ? Number(balance.balance).toFixed(2) : '0.00'}
-//               </Text>
-//             </View>
-
-//             {/* TransactionHistory component or icon */}
-//             <View style={{position: 'absolute', right: 0, top: 0}}>
-//               <TransactionBoxImage style={{marginRight: 5, scale: 0.9}} />
-//             </View>
-//           </View>
-//           <View style={{marginTop: 5}}>
-//             <Text style={styles.prepaidText}>Subscription/Dues</Text>
-//             <View
-//               style={{
-//                 flexDirection: 'row',
-//                 alignItems: 'center',
-//               }}>
-//               <View style={{flex: 0.5, flexShrink: 0, flexWrap: 'nowrap'}}>
-//                 <Text style={styles.postpaidBalanceText}>Current Bill</Text>
-//                 <Text style={styles.moneyText}>
-//                   ₹
-//                   {account_summary?.bill_amt
-//                     ? Number(account_summary?.bill_amt).toFixed(2)
-//                     : '0.00'}
-//                 </Text>
-//               </View>
-//               <View
-//                 style={{
-//                   ...styles.equalFlex,
-//                   flexShrink: 0,
-//                   flexWrap: 'nowrap',
-//                 }}>
-//                 <Text style={styles.postpaidBalanceText}>Debit</Text>
-//                 <Text style={styles.moneyText}>
-//                   ₹
-//                   {account_summary?.total_debit
-//                     ? Number(account_summary?.total_debit).toFixed(2)
-//                     : '0.00'}
-//                 </Text>
-//               </View>
-//             </View>
-//             <View
-//               style={{
-//                 flexDirection: 'row',
-//                 alignItems: 'center',
-//               }}>
-//               <View style={{flex: 0.5}}>
-//                 <Text style={styles.postpaidBalanceText}>Credit</Text>
-//                 <Text style={styles.moneyText}>
-//                   ₹
-//                   {account_summary?.total_credit
-//                     ? Number(account_summary?.total_credit).toFixed(2)
-//                     : '0.00'}
-//                 </Text>
-//               </View>
-//               <View
-//                 style={{
-//                   ...styles.equalFlex,
-//                   flexShrink: 0,
-//                   flexWrap: 'nowrap',
-//                 }}>
-//                 <Text style={styles.postpaidBalanceText}>Outstanding</Text>
-//                 <Text style={styles.moneyText}>
-//                   ₹
-//                   {account_summary?.outstanding_amt
-//                     ? Number(account_summary?.outstanding_amt).toFixed(2)
-//                     : '0.00'}
-//                 </Text>
-//               </View>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-
-//       <ScrollView showsVerticalScrollIndicator={false}>
-//         <View style={{flex: 1, marginTop: 20}}>
-//           <FlatList
-//             ListEmptyComponent={emptyList}
-//             data={options?.currentOptions}
-//             numColumns={3}
-//             contentContainerStyle={{marginHorizontal: 5, marginBottom: 10}}
-//             keyExtractor={(item, index) => item.name}
-//             renderItem={item => renderItem(item, true)}
-//           />
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-// export default HomeComponent;
-// const styles = StyleSheet.create({
-//   modalContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   modalContent: {
-//     width: 300,
-//     padding: 20,
-//     backgroundColor: 'white',
-//     borderRadius: 10,
-//     alignItems: 'center',
-//   },
-//   modalText: {
-//     marginBottom: 20,
-//     fontSize: 16,
-//     fontWeight: '300',
-//     textAlign: 'center',
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//   },
-//   Buttons: {
-//     backgroundColor: SECONDARY_COLOR,
-//     padding: 8,
-//     paddingHorizontal: 12,
-//     borderRadius: 8,
-//   },
-//   prepaidText: {
-//     fontSize: moderateScale(16),
-//     fontFamily: FONT_FAMILY.Cinzel,
-//     fontWeight: 'bold',
-//     color: 'black',
-//   },
-
-//   moneyText: {
-//     fontSize: 15,
-//     fontWeight: '800',
-//     color: '#79ca14',
-//     marginTop: 3,
-//     fontFamily: FONT_FAMILY.Muli,
-//   },
-//   equalFlex: {
-//     flex: 0.33,
-//     alignItems: 'flex-start',
-//     justifyContent: 'center',
-//   },
-//   postpaidBalanceText: {
-//     fontSize: 14,
-//     fontWeight: '400',
-//     marginTop: 5,
-//     fontFamily: FONT_FAMILY.Muli,
-//   },
-//   dateText: {
-//     fontSize: 15,
-//     fontWeight: '400',
-//     fontFamily: FONT_FAMILY.Muli,
-//   },
-//   primeryIcon: {
-//     justifyContent: 'space-around',
-//     alignItems: 'center',
-//     borderRadius: 5,
-//     padding: 10,
-//     backgroundColor: 'transparent',
-//   },
-//   secondryIcon: {
-//     justifyContent: 'space-around',
-//     alignItems: 'center',
-//     borderRadius: 30,
-//     padding: 10,
-//     marginBottom: 20,
-//     backgroundColor: 'white',
-//     elevation: 10,
-//     shadowColor: 'grey',
-//     shadowOffset: {
-//       width: 0,
-//       height: 3,
-//     },
-//     shadowOpacity: 0.3,
-//     shadowRadius: 1,
-//   },
-//   roundShimmer: {
-//     width: 50, // Set width for the shimmer
-//     height: 50, // Set height for the shimmer
-//     borderRadius: 50, // Make it round
-//   },
-// });

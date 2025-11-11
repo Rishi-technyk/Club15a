@@ -78,13 +78,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.technyk.aepta"
+    namespace "com.technyk.club15a"
     defaultConfig {
-        applicationId "com.technyk.aepta"
+        applicationId "com.technyk.club15a"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-         versionCode 17
-        versionName "1.6.9"
+         versionCode 19
+        versionName "0.1.9"
     }
     signingConfigs {
         debug {
@@ -92,16 +92,16 @@ android {
             // storePassword 'android'
             // keyAlias 'androiddebugkey'
             // keyPassword 'android'
-             storeFile file('appKeystore.jks')
-            storePassword '123456'
-            keyAlias 'key1'
-            keyPassword '123456'
+             storeFile file('club15a.jks')
+            storePassword 'qwerty'
+            keyAlias 'key-1'
+            keyPassword 'qwerty'
         }
         release {
-             storeFile file('appKeystore.jks')
-            storePassword '123456'
-            keyAlias 'key1'
-            keyPassword '123456'
+             storeFile file('club15a.jks')
+            storePassword 'qwerty'
+            keyAlias 'key-1'
+            keyPassword 'qwerty'
         }
     }
     buildTypes {

@@ -1,4 +1,4 @@
-package com.technyk.aepta
+package com.technyk.club15a
 
 import android.app.Application
 import com.facebook.react.PackageList

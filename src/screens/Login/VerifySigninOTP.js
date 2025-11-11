@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   View,
@@ -9,10 +9,12 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  StyleSheet,
 } from "react-native";
 import LoginTextInput from "../../components/LoginTextInput";
-import { DARK_BLUE, PRIMARY_BUTTON_BLUE } from "../../util/colors";
+import { DARK_BLUE, PRIMARY_BUTTON_BLUE, PRIMARY_COLOR } from "../../util/colors";
 import { VerifySigninOTP } from "./VerifySigninOTPService.js";
+import messaging from "@react-native-firebase/messaging";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import Svg, { Path, } from "react-native-svg";
@@ -21,6 +23,7 @@ import { FONT_FAMILY } from "../../util/constant.js";
 import Button2 from "../../components/Button2.js";
 import { Loginstyles } from "../../Styles/LoginStyles.js";
 import { Toast } from "react-native-toast-notifications";
+import { SigninWithOTPScreenService } from "./SigninWithOTPScreenService.js";
 
 const VerifySigninOTPScreen = ({ route, navigation }) => {
   const [usernameTextValue, setUsernameTextValue] = useState("");
@@ -28,6 +31,14 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.auth);
   const { width, height } = Dimensions.get("window");
+   const [canResend, setCanResend] = useState(false);
+     const [timeLeft, setTimeLeft] = useState(300); 
+
+      const formatTime = (secs) => {
+    const minutes = Math.floor(secs / 60);
+    const seconds = secs % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
   const VerifySignInOTP = async () => {
   Toast.hideAll()
     if (usernameTextValue === "") {
@@ -44,10 +55,11 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
       });
       return;
     }
-
+ const permission = await messaging().hasPermission();
     const payload = {
       member_id: route.params?.memberID,
       otp: usernameTextValue,
+      has_notification_permission: permission,
     };
     setLoadingData(true);
     try {
@@ -85,10 +97,38 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
     setLoadingData(false);
   };
 
+    useEffect(() => {
+    if (timeLeft <= 0) {
+      setCanResend(true);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
   const onChangeText = (text) => {
     setUsernameTextValue(text);
   };
 
+      const resendOTP = async() => {
+       let response = await SigninWithOTPScreenService(route?.params?.memberID)
+      if (response.status === true) {
+ setTimeLeft(300);
+     setCanResend(false);
+      Alert.alert('Signin With OTP',response.message||'OTP send successfully');
+       }else{
+         Alert.alert('Signin With OTP', response.message||'Failed to resend OTP.', [
+                            {
+                                text: 'OK', onPress: () => {
+                                    navigation.navigate('LoginScreen')
+                                }
+                            },
+                        ], { cancelable: false });
+       }
+  };
   const renderNameField = () => {
     return (
       <LoginTextInput
@@ -142,7 +182,7 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
           source={require("../../assets/images/AeptaLogo.png")}
           style={Loginstyles.logo}
         />
-        <Text style={Loginstyles.headdingTitle}>AEPTA</Text>
+        <Text style={Loginstyles.headdingTitle}>Club 15A</Text>
       </View>
 
       <View>
@@ -165,6 +205,18 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
         </View>
 
         <View style={{ marginVertical: 20 }}>{renderNameField()}</View>
+         {canResend ? (
+          <TouchableOpacity
+            style={styles.resendButton}
+            onPress={resendOTP}
+          >
+            <Text style={styles.resendText}>Resend OTP</Text>
+          </TouchableOpacity>
+        ) : (
+          <Text style={styles.timerText}>
+            Resend OTP in {formatTime(timeLeft)}
+          </Text>
+        )}
         <Button2
           onPress={VerifySignInOTP}
           text={"Verify OTP"}
@@ -185,3 +237,9 @@ const VerifySigninOTPScreen = ({ route, navigation }) => {
   );
 };
 export default VerifySigninOTPScreen;
+
+const styles = StyleSheet.create({
+  resendText:{fontFamily:FONT_FAMILY.bold,color:PRIMARY_COLOR,},
+  timerText:{fontFamily:FONT_FAMILY.bold,color:PRIMARY_COLOR,alignSelf:'flex-end'},
+  resendButton:{alignSelf:'flex-end'}
+})

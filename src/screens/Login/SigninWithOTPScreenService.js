@@ -19,6 +19,6 @@ export async function SigninWithOTPScreenService(member_id) {
  return (response)
     }
     catch (err) {
-        return { result: FAILURE }
+        return { message:'Error occurred while sending OTP'}
     }
 }

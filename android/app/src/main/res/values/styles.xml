@@ -1,12 +1,8 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-          <item name="android:windowBackground">@android:color/black</item> <!-- or transparent -->
-         <!-- <item name="android:statusBarColor">@color/status_bar_color</item>
-        <item name="android:windowIsTranslucent">true</item>
-         <item name="android:windowFullscreen">true</item> -->
+        <!-- Set your custom background color -->
+        <item name="android:windowBackground">@color/app_background</item>
     </style>
-
 </resources>
+

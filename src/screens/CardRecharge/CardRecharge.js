@@ -127,13 +127,15 @@ const onApply = (ind) => {
         const payload = {
        
             path: ENDPOINT.create_recharge_pay_order,
-        body:{  amount: amount},
+        body:{  amount: amount,
+          type:'Card Recharge'
+        },
           Token:userData?.data?.token
         };
-  
         let response = await api.javascriptPost(payload,);
+        console.log('\x1b[36m%s\x1b[0m', response, '---------------------- Subscription ---------------------');
   
-        if (response && response?.data?.razorpayKey) {
+        if (response && response?.data?.url) {
        
           navigation.navigate('PaymentWebView', {
              type:'Recharge',
@@ -142,6 +144,7 @@ const onApply = (ind) => {
             data:response?.data,
           });
   setAmount("");
+  
           setLoading(false);
         } else if(!response.status){
           setLoading(false);

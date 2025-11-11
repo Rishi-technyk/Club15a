@@ -1,0 +1,53 @@
+
+shivammalla@Shivams-MacBook-Air android % keytool -genkeypair -v -keystore club15a.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key-1
+
+Enter keystore password:  
+Re-enter new password: 
+What is your first and last name?
+  [Unknown]:  shivam malla
+What is the name of your organizational unit?
+  [Unknown]:  technyk
+What is the name of your organization?
+  [Unknown]:  technyk
+What is the name of your City or Locality?
+  [Unknown]:  Delhi
+What is the name of your State or Province?
+  [Unknown]:  Delhi
+What is the two-letter country code for this unit?
+  [Unknown]:  IN
+Is CN=shivam malla, OU=technyk, O=technyk, L=Delhi, ST=Delhi, C=IN correct?
+  [no]:  yes
+
+Generating 2,048 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 10,000 days
+        for: CN=shivam malla, OU=technyk, O=technyk, L=Delhi, ST=Delhi, C=IN
+[Storing club15a.jks]
+
+shivammalla@Shivams-MacBook-Air app % keytool -list -v -keystore club15a.jks -alias key-1
+Enter keystore password:  
+Alias name: key-1
+Creation date: 30-Jun-2025
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=shivam malla, OU=technyk, O=technyk, L=Delhi, ST=Delhi, C=IN
+Issuer: CN=shivam malla, OU=technyk, O=technyk, L=Delhi, ST=Delhi, C=IN
+Serial number: 62522606fdb0a9b3
+Valid from: Mon Jun 30 11:44:23 IST 2025 until: Fri Nov 15 11:44:23 IST 2052
+Certificate fingerprints:
+         SHA1: F9:07:58:57:36:A3:A7:63:84:65:3B:35:35:3F:F1:5F:6C:4F:9C:A1
+         SHA256: 6A:97:1C:4D:79:97:93:27:64:18:BE:F6:7B:81:96:DE:55:5A:9F:7B:07:AE:63:05:1E:82:0A:BB:8A:B3:5E:FE
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: BB 01 66 14 34 3F 5E 5E   4F 9A C2 C9 C7 8B 27 3A  ..f.4?^^O.....':
+0010: C5 74 FF 50                                        .t.P
+]
+]
+
+shivammalla@Shivams-MacBook-Air app % 

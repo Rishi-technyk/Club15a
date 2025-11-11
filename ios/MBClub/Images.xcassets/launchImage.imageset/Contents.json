@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "AeptaLogo.png",
+      "filename" : "AppIcon~ios-marketing.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "AeptaLogo 1.png",
+      "filename" : "AppIcon~ios-marketing 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "AeptaLogo 2.png",
+      "filename" : "AppIcon~ios-marketing 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

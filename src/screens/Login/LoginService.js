@@ -19,6 +19,7 @@ export async function loginWith(username, password, data,notificationPermission)
         has_notification_permission:notificationPermission
       },
     };
+    console.log('\x1b[36m%s\x1b[0m', apiRequestObject, '---------------------- apiRequestObject ---------------------');
     const response = await api.javascriptPost(apiRequestObject);
     console.log(response,apiRequestObject,'------------------------------------response,apiRequestObject-------------------------');
     if (response.status && response.token) {

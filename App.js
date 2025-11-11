@@ -22,6 +22,7 @@ import { DARK_BLUE, LIGHT_GREEN, SECONDARY, SECONDARY_COLOR } from "./src/util/c
 import {  ToastProvider,  } from "react-native-toast-notifications";
 import Icon from "react-native-vector-icons/Ionicons";
 import { FONT_FAMILY } from "./src/util/constant";
+import { navigationRef } from "./src/Navigation/ NavigationService";
 
 const client = new QueryClient();
 const Application = () => {
@@ -56,6 +57,7 @@ const Application = () => {
         <ToastProvider
        placement="top"
        duration={2000}
+       offset={30}
        animationType="zoom-in"
        animationDuration={300}
        successColor={'rgba(120, 202, 20, 0.78)'}
@@ -75,7 +77,7 @@ const Application = () => {
        normalColor="gray"
        swipeEnabled={true}>
           <QueryClientProvider client={client}>
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
               <SafeAreaProvider
               >
                 <SafeAreaView
@@ -98,5 +100,6 @@ const Application = () => {
 
 export default Application;
 
-//12126
-//aepta2024
+//D0981
+// 9910799828
+// 9910799828

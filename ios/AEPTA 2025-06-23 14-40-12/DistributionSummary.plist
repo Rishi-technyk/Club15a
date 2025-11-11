@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AEPTA.ipa</key>
+	<key>Club15a.ipa</key>
 	<array>
 		<dict>
 			<key>architectures</key>
@@ -86,7 +86,7 @@
 			<key>entitlements</key>
 			<dict>
 				<key>application-identifier</key>
-				<string>22N8UDXNHA.com.technyk.aepta</string>
+				<string>22N8UDXNHA.com.technyk.club15a</string>
 				<key>aps-environment</key>
 				<string>production</string>
 				<key>beta-reports-active</key>
@@ -97,7 +97,7 @@
 				<false/>
 			</dict>
 			<key>name</key>
-			<string>AEPTA.app</string>
+			<string>Club15a.app</string>
 			<key>profile</key>
 			<dict>
 				<key>UUID</key>
@@ -105,7 +105,7 @@
 				<key>dateExpires</key>
 				<string>02/03/26</string>
 				<key>name</key>
-				<string>iOS Team Store Provisioning Profile: com.technyk.aepta</string>
+				<string>iOS Team Store Provisioning Profile: com.technyk.club15a</string>
 			</dict>
 			<key>symbols</key>
 			<true/>

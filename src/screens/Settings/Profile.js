@@ -20,7 +20,7 @@ import { Toast } from 'react-native-toast-notifications';
 const Profile = () => {
   const [data] = useSelector(state => state?.auth?.userData?.data?.data);
    const token = useSelector(state => state?.auth?.userData?.data?.token);
-  console.log(data);
+ 
  const [profileImage, setProfileImage] = useState(
     'https://randomuser.me/api/portraits/men/1.jpg'
   );
@@ -148,7 +148,7 @@ const updateProfilePicture = async (imageUri) => {
         <TouchableOpacity onPress={openImagePicker}style={styles.body}>
           <Avatar.Image
             size={100}
-            source={{uri: `https://teebooking.aepta.in/api/profile_pictures/${data.profile_image}` || profileImage}}
+            source={{uri: `https://15asportsclub.in/15asports/public/profile_pictures/${data.profile_image}` || profileImage}}
             style={{backgroundColor: 'white', margin: 20}}
           />
           <Text

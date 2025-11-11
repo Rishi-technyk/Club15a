@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 
 const fetchTransactions = async ({queryKey}) => {
-  const [, startDate, endDate, memberId, token] = queryKey;
+  const [, startDate, endDate, memberId, token,  paymode, location,] = queryKey;
  
   const body =
     startDate && endDate
@@ -18,6 +18,8 @@ const fetchTransactions = async ({queryKey}) => {
         }
       : {
           ws_type: ENDPOINT.invoice,
+          pay_mode: paymode,
+          locations: location,
           member_id: memberId,
         };
 
@@ -27,6 +29,7 @@ const fetchTransactions = async ({queryKey}) => {
           path: ENDPOINT.invoice_transaction_filter,
           body: body,
           Token: token,
+          
         }
       : {
           path: ENDPOINT.invoice,
@@ -35,7 +38,6 @@ const fetchTransactions = async ({queryKey}) => {
         };
 
   const response = await api.javascriptPost(apiRequestObject);
-console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
   if (!startDate && !endDate) {
     let body = {};
     body.ws_type = ENDPOINT.account_summary;
@@ -48,6 +50,7 @@ console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ----
     };
 
     const data = await api.javascriptGet(apiRequestObject);
+    
     newData = {
       ...response,
       closing_balance: data.data.outstanding_amt,
@@ -60,20 +63,21 @@ console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ----
     return response;
   }
 };
+ 
 export async function getStatement({ queryKey }) {
   const [, member_id, token] = queryKey;
 
-  let body = {};
-  body.member_id = member_id;
+ 
 
   try {
     const apiRequestObject = {
       path: ENDPOINT.statement,
-      body: body,
+      body: {},
       Token: token,
     };
-    const response = await api.javascriptPost(apiRequestObject);
-    return response;
+    const response = await api.javascriptGet(apiRequestObject);
+  
+    return response.data;
   } catch (err) {
     console.error(err)
     return {result: FAILURE};
@@ -91,7 +95,7 @@ export const useStatments = userData => {
     refetchOnWindowFocus: false,
   });
 };
-export const useTransactions = (startDate, endDate, userData) => {
+export const useTransactions = (startDate, endDate, userData,paymode, location) => {
   const memberId = userData?.data?.data?.[0]?.MemberID;
 
   return useQuery({
@@ -101,6 +105,8 @@ export const useTransactions = (startDate, endDate, userData) => {
       endDate || '',
       memberId,
       userData.data.token,
+      paymode, 
+      location
     ], // Ensure unique key
     queryFn: fetchTransactions,
     enabled: !!memberId,
@@ -111,7 +117,6 @@ export const useTransactions = (startDate, endDate, userData) => {
 };
 const fetchRecharges = async ({ queryKey }) => {
   const [, startDate, endDate, location, memberId,token,paymode] = queryKey;
-console.log('\x1b[31m%s\x1b[0m', paymode, '---------------------- paymode ---------------------');
   const body =
     (startDate && endDate) || location.length
       ? {

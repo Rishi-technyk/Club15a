@@ -9,6 +9,7 @@ export async function VerifySigninOTP(payload,data) {
     body.device_id= data.deviceId,
     body.device_type=data.devicePlatform,
     body.device_app_version= data.deviceVersion
+    body.has_notification_permission= payload.has_notification_permission
   
     try {
         const apiRequestObject = {

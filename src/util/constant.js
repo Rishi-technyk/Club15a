@@ -1,7 +1,12 @@
-import BASE_URL from "@env";
+
 
 export const DOMAIN = {
-  BASE: BASE_URL,
+  BASE: 'https://15asportsclub.in/15asports/api/',
+
+  // BASE: "http://127.0.0.1:8000/api/",
+  PAY_DOMAIN: "https://dsoi.org.in/membersection/mobileAPI/",
+  SERVER_DOMAIN: "https://dsoi.org.in/",
+  NEW_URL: "https://dsoi.org.in/",
 };
 
 export const NETWORK_CONSTANTS = {
@@ -13,12 +18,12 @@ export const ENDPOINT = {
   login: "auth/login",
   member_profile: "member_profile",
   logout: "logout",
-  create_recharge_pay_order:"member/create_recharge_pay_order",
+  create_recharge_pay_order:"member/create_pay_order",
   create_invoice_pay_order:"member/create_invoice_pay_order",
     process_payment:"member/process_payment",
   appointment: "appointment",
   app_history: "app_history",
-  statement: "member/statement",
+  statement: "member/transation/summery",
   card_recharge: "card_recharge",
   generate_id: "generate_id",
   pay_success: "pay_success",

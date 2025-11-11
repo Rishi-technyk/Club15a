@@ -49,11 +49,11 @@ const DownloadModal = ({ visible, setVisible, data }) => {
         ? ENDPOINT.invoice_transaction_download
         : ENDPOINT.transaction_download;
     body.member_id = userData.data.data[0].MemberID;
-    body.pay_mode = data === "wallet" ? "SmartCard" : "CREDIT";
+    body.pay_mode = data === "wallet" ? "" : "CREDIT";
     body.start_date = startDate;
     body.end_date = endDate;
     if (data !== "Credit") {
-      body.pay_mode = data === "member" ? "SmartCard" : "CREDIT";
+      body.pay_mode = data === "member" ? "" : "CREDIT";
     }
 
     try {
@@ -65,6 +65,7 @@ const DownloadModal = ({ visible, setVisible, data }) => {
       console.log(apiRequestObject);
       setLoader(true);
       const response = await api.javascriptPost(apiRequestObject);
+      console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
       setClick(null)
       setLoader(false);
       if (response.status === true) {

@@ -54,6 +54,10 @@ const BaseContainer = () => {
       if (initialNotification) {
         console.log('Initial notification:=--------=========------===========000000099999', initialNotification);
         // Handle initial notification if needed
+          if (initialNotification?.data?.screen) {
+        
+          navigate(initialNotification?.data?.screen, initialNotification.data);
+        }
       }
     } catch (error) {
       console.error('Error setting up push notifications909090089089988798:', error);

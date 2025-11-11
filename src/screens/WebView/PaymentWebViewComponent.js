@@ -10,6 +10,7 @@ import {
   Alert,
   ActivityIndicator,
   Dimensions,
+  Linking,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import {useRoute} from '@react-navigation/native';
@@ -22,6 +23,7 @@ import { SECONDARY_COLOR } from '../../util/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Header from '../../components/Header';
+import WebView from 'react-native-webview';
 
 const PaymentWebViewComponent = () => {
   const navigation = useNavigation();
@@ -30,88 +32,104 @@ const PaymentWebViewComponent = () => {
   const userData = useSelector(state => state.auth.userData);
   const [Data, setData] = useState(null);
   const [paymentInitiated, setPaymentInitiated] = useState(false);
-  const [loading, setLoading] = useState(true);
- useEffect(() => {
-  if (!paymentInitiated) {
-    setPaymentInitiated(true);
-    startPayment();
-  }
-}, [paymentInitiated]);
-  const startPayment = () => {
-    const options = {
-      description: 'Payment for order',
-      image: 'https://teebooking.aepta.in/public/member/assets/img/dsoi-logo-name.png', 
-      currency: 'INR',
-      key: data.razorpayKey, 
-      amount: data.amount * 100,  
-      name: userData?.data?.data[0]?.DisplayName || 'User',
-      prefill: {
-        email: userData?.data?.data[0]?.Email || '',
-        contact: userData?.data?.data[0]?.Phone || '',
-      },
-      theme: {color: '#222642'},
-    };
+  const [loading, setLoading] = useState(false);
 
-    RazorpayCheckout.open(options)
-      .then(async paymentData => {
-        console.log('\x1b[36m%s\x1b[0m', paymentData, '---------------------- paymentData ---------------------');
-        if (paymentData?.razorpay_payment_id) {
-      
-          const paydata=await JSON.stringify(paymentData)
-          const payload = {
-            path: ENDPOINT.process_payment,
-            body: {
-              razorpay_order_id: data.orderId,
-              razorpay_payment_id: paymentData.razorpay_payment_id,
-              razorpay_response:paydata,
-              status: true,
-            },
-            Token: userData?.data?.token,
-          };
-          let response = await api.javascriptPost(payload);
-       console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
-          setData(response.data)
-          setLoading(false)
-        }else{
-           const paydata=await JSON.stringify(paymentData)
-          const payload = {
-            path: ENDPOINT.process_payment,
-            body: {
-              razorpay_order_id: data.orderId ,
-              razorpay_payment_id: paymentData.razorpay_payment_id ||'N/A',
-              razorpay_response:paydata,
-              status: false,
-            },
-            Token: userData?.data?.token,
-          };
-          let response = await api.javascriptPost(payload);
-       console.log('\x1b[36m%s\x1b[0m', response, '---------------------- response ---------------------');
-          setData(response.data)
-          setLoading(false)
+// const onShouldStartLoadWithRequest=(request) => {
+//     const { url } = request;
+//     if (
+//       url.startsWith('upi://') ||
+//       url.startsWith('tez://') ||
+//       url.startsWith('phonepe://') ||
+//       url.startsWith('paytmmp://')
+//     ) {
+//       Linking.canOpenURL(url)
+//         .then((supported) => {
+//           if (supported) {
+//             Linking.openURL(url);
+//           } else {
+//             Alert.alert(
+//               'UPI App not found',
+//               'No UPI app found to handle this payment. Please install one.'
+//             );
+//           }
+//         })
+//         .catch((err) => console.log('Error opening UPI app: ', err));
+//       return true; // block WebView navigation
+//     }
+//     return true; // allow other URLs
+//   }
+
+const onShouldStartLoadWithRequest = (request) => {
+  console.log('\x1b[32m%s\x1b[0m', request, '---------------------- request ---------------------');
+  const { url } = request;
+
+  // 🔹 Check if it's a UPI deep link
+  if (
+    url.startsWith('upi://') ||
+    url.startsWith('tez://') ||
+    url.startsWith('phonepe://') ||
+    url.startsWith('paytmmp://')
+  ) {
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert(
+            'UPI App not found',
+            'No UPI app found to handle this payment. Please install one.'
+          );
         }
       })
-      
-      .catch(async error => {
-    console.log('\x1b[36m%s\x1b[0m', error, '---------------------- error ---------------------');
-        const payload = {
-          path: ENDPOINT.process_payment,
-          body: {
-            razorpay_order_id: data.orderId ||data.razorpayKey,
-            razorpay_payment_id: error.payment_id||'N/A',
-            razorpay_response: JSON.stringify(error),
-            status: false,
-          },
-          Token: userData?.data?.token,
-        };
-     
+      .catch((err) => console.log('Error opening UPI app: ', err));
+    return false; // block WebView from trying to load UPI link
+  }
 
-        let response = await api.javascriptPost(payload);
-        setData(response.data)
-        setLoading(false)
-      });
+  // 🔹 Handle the callback/return URL from gateway (example: success/failure)
+  if (url.includes("paymentResponse") || url.includes("status")) {
+    console.log("✅ Payment Response URL:", url);
+    // You can parse query params here
+    // navigation.navigate('PaymentResult', { url });
+  }
+
+  return true; // allow other URLs to load in WebView
+};
+const openUPILink = async (url) => {
+  try {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url); // 🚀 Opens in UPI app or browser
+    } else {
+      Alert.alert("Not Supported", "No app found to handle this payment link.");
+    }
+  } catch (err) {
+    console.error("Error opening UPI link:", err);
+    Alert.alert("Error", "Something went wrong while opening the payment link.");
+  }
+};
+useEffect(() => {
+  openUPILink(data.url)
+  
+  const handleDeepLink = (event) => {
+    console.log("🔄 Returned to app with URL:", event.url);
+
+    if (event.url.includes("status=SUCCESS")) {
+      Alert.alert("✅ Payment Success");
+      navigation.replace("PaymentSuccessScreen");
+    } else if (event.url.includes("status=FAILED")) {
+      Alert.alert("❌ Payment Failed");
+      navigation.replace("PaymentFailedScreen");
+    } else {
+      console.log("Other callback:", event.url);
+    }
   };
 
+  const subscription = Linking.addEventListener("url", handleDeepLink);
 
+  return () => {
+    subscription.remove();
+  };
+}, []);
 
   return (
    
@@ -119,7 +137,7 @@ const PaymentWebViewComponent = () => {
      <View style={styles.container}>
    
     
-      <Header title={'Payment Detail'}/>
+      <Header title={'Payment '}/>
     <View
          style={{
            backgroundColor: 'white',
@@ -127,97 +145,36 @@ const PaymentWebViewComponent = () => {
            flex: 1,
           
          }}>
-        
-         <ScrollView showsVerticalScrollIndicator={false}>
-           <View
-             style={{
-               paddingBottom: 5,
-               justifyContent: 'center',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-             }}>
-             <Text style={styles.headerStyle}>Member Name</Text>
-             <Text style={styles.textStyle}>
-               {Data?.MemberName ? Data.MemberName : 'Not Available'}
-             </Text>
-           </View>
-           <View
-             style={{
-               flexDirection: 'row',
-               justifyContent: 'space-between',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-               paddingBottom: 5,
-             }}>
-             <View style={{width: width / 2}}>
-               <Text style={styles.headerStyle}>C ID</Text>
-               <Text style={styles.textStyle}>
-                 {Data?.MemberSCID ? Data.MemberSCID : 'Not Available'}
-               </Text>
-             </View>
-             <View style={{width: width / 2 - 100}}>
-               <Text style={styles.headerStyle}>M ID</Text>
-               <Text style={styles.textStyle}>
-                 {Data?.MemberID ? Data.MemberID : 'Not Available'}
-               </Text>
-             </View>
-           </View>
-
-           <View
-             style={{
-               paddingBottom: 5,
-               justifyContent: 'center',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-             }}>
-             <Text style={styles.headerStyle}>{route.params.type} Amount</Text>
-             <Text style={styles.textStyle}>
-               {Data?.paid_amount ? Data.paid_amount : 'Not Available'}
-             </Text>
-           </View>
-
-           <View
-             style={{
-               paddingBottom: 5,
-               justifyContent: 'center',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-             }}>
-             <Text style={styles.headerStyle}>Merchant Reference No</Text>
-             <Text style={styles.textStyle}>
-               {Data?.reference_number
-                 ? Data.reference_number
-                 : 'Not Available'}
-             </Text>
-           </View>
-
-           <View
-
-             style={{
-               paddingBottom: 5,
-               justifyContent: 'center',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-             }}>
-             <Text style={styles.headerStyle}>Payment Status</Text>
-             <Text style={styles.textStyle}>
-               {Data?.Status ? Data.Status : 'Not Available'}
-             </Text>
-           </View>
-
-           <View
-             style={{
-               paddingBottom: 5,
-               justifyContent: 'center',
-               paddingHorizontal: 20,
-               paddingTop: 30,
-             }}>
-             <Text style={styles.headerStyle}>Transaction ID</Text>
-             <Text style={styles.textStyle}>
-               {data.orderId ? data.orderId : 'Not Available'}
-             </Text>
-           </View>
-         </ScrollView>
+              {/* <WebView
+        automaticallyAdjustContentInsets={false}
+        // ref={(ref) => (setWebView(ref))}
+        source={{uri:data?.url||''}}
+        // injectedJavaScriptBeforeContentLoaded={pucJavaScript}
+        scrollEnabled
+        scalesPageToFit={false}
+        originWhitelist={['*']}
+        javaScriptEnabled={true}
+        cacheEnabled={true}
+        allowFileAccessFromFileURLs={true}
+        setSupportMultipleWindows={true}
+        domStorageEnabled={true}
+        allowUniversalAccessFromFileURLs={true}
+ onLoadStart={(syntheticEvent) => {
+  console.log("🚀 onLoadStart URL:", syntheticEvent.nativeEvent.url);
+}}
+            startInLoadingState={true}
+            
+        onNavigationStateChange={ onShouldStartLoadWithRequest}
+       onError={(syntheticEvent) => {
+        const { nativeEvent } = syntheticEvent;
+        console.log('WebView error: ', nativeEvent);
+    }}
+    onHttpError={(syntheticEvent) => {
+        const { nativeEvent } = syntheticEvent;
+        console.log('HTTP error: ', nativeEvent);
+    }}
+      /> */}
+       
        </View>
        {loading &&
        <View style={{ backgroundColor: "rgba(0, 0,0, 0.3)", flex: 1, position: "absolute", top: 0, bottom: 0, left: 0, right: 0 }}>

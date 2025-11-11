@@ -25,7 +25,7 @@ const NotificationListScreen = ({ navigation, route }) => {
   const [notificationdata, setData] = useState([]);
 
   const userData = useSelector((state) => state.auth.userData);
-  console.log(userData.data.token, "---------------variableName---------------");
+ 
   const fetchNotifications = async () => {
     try {
       const fetchData = await notificationList(userData.data.token);
@@ -38,6 +38,17 @@ console.log('\x1b[36m%s\x1b[0m', fetchData, '---------------------- notification
     fetchNotifications();
   }, []);
 
+     useEffect(() => {
+    if (route.params?.id) {
+      const notificationId = route.params.id;
+      const selectedNotification = notificationdata?.find(
+        (item) => item.id === notificationId
+      );
+      if (selectedNotification) {
+        navigation.navigate("NotificationDetailScreen", { data: selectedNotification });
+      }
+    }
+  }, [notificationdata]);
   const renderItem = ({ item }) => (
     <Card
       onPress={() =>
@@ -49,6 +60,7 @@ console.log('\x1b[36m%s\x1b[0m', fetchData, '---------------------- notification
           source={{
             uri: item?.image,
           }}
+          resizeMode='cover'
           style={styles.imgStyle}
         />
 
@@ -92,7 +104,7 @@ console.log('\x1b[36m%s\x1b[0m', fetchData, '---------------------- notification
 
   return (
     <View style={styles.container}>
-      <Header title={"News & Circulars"} />
+      <Header title={"Circulars"} />
 
       <FlatList
         data={notificationdata}

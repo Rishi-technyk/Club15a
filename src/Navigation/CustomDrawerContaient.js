@@ -65,7 +65,7 @@ export const CustomDrawerContent = (props) => {
           style={{ marginTop: 10, alignItems: "center" }}>
           <Avatar.Image
             size={60}
-            source={{ uri: Array.isArray(data) && data[0].profile_image ? `https://teebooking.aepta.in/api/profile_pictures/${data[0].profile_image}`:"https://randomuser.me/api/portraits/men/1.jpg" }}
+            source={{ uri: Array.isArray(data) && data[0].profile_image ? `https://15asportsclub.in/15asports/public/profile_pictures/${data[0].profile_image}`:"https://randomuser.me/api/portraits/men/1.jpg" }}
             style={{ backgroundColor: "white" }}
           />
           <Icons
@@ -159,12 +159,12 @@ export const CustomDrawerContent = (props) => {
             icon={({ color, size }) => (
               <Icons name="shield-refresh" color={"white"} size={size} />
             )}
-            label="Cancellation & Refund Policy"
+            label="Refund and Returns Policy"
             labelStyle={{ color: "white", fontFamily: FONT_FAMILY.normal }}
             onPress={() =>
               props.navigation.navigate("Info", {
                 index: 3,
-                name: "Cancellation & Refund Policy",
+                name: "Refund and Returns Policy",
               })
             }
           />
